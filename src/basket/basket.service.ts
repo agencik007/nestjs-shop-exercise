@@ -3,12 +3,10 @@ import { AddProductDto } from './dto/add-product.dto';
 import {
   AddProductToBasketResponse,
   GetTotalPriceOfBasketResponse,
-  ListProductsInBasketResponse,
   RemoveProductFromBasketResponse,
 } from '../interfaces/basket';
 import { ShopService } from '../shop/shop.service';
 import { ItemInBasket } from './item-in-basket.entity';
-import { ShopItem } from 'src/shop/shop-item.entity';
 
 @Injectable()
 export class BasketService {
