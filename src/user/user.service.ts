@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { RegisterUserResponse } from "src/interfaces/user";
 import { RegisterDto } from "./dto/register.dto";
 import { User } from "./user.entity";
@@ -10,10 +10,10 @@ export class UserService {
         const checkEmail = await User.findOne({where: {email: newUser.email}})
 
         if (checkEmail) {
-            return {
-                statusCode: 400,
-                message: `User with email: ${newUser.email} already exists. Use another email address.`
-            }
+            throw new HttpException(
+                `User with email ${newUser.email} already exists.`,
+                HttpStatus.BAD_REQUEST,
+                )
         }
 
         const user = new User();
@@ -21,5 +21,9 @@ export class UserService {
         await user.save();
 
         return user;
+    }
+
+    async getOneUser(id: string): Promise<User> {
+        return await User.findOne({where: {id: id}})
     }
 }
