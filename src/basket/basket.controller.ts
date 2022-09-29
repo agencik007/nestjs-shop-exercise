@@ -11,8 +11,9 @@ import { AddProductDto } from './dto/add-product.dto';
 import { BasketService } from './basket.service';
 import {
   AddProductToBasketResponse,
+  GetBasketStatsResponse,
   GetTotalPriceOfBasketResponse,
-  ListProductsInBasketResponse,
+  OneItemInBasket,
   RemoveProductFromBasketResponse,
 } from '../interfaces/basket';
 
@@ -26,25 +27,42 @@ export class BasketController {
     return this.basketService.add(item);
   }
 
-  @Delete('/all')
-  removeAllProductsFromBasket() {
-    this.basketService.clearBasket();
+  @Delete('/all/:userId')
+  removeAllProductsFromBasket(
+    @Param('userId') userId: string,
+  ) {
+    this.basketService.clearBasket(userId);
   } 
 
-  @Delete('/:id')
+  @Delete('/:itemInBasketId/:userId')
   removeProductFromBasket(
-    @Param('id') id: string,
+    @Param('itemInBasketId') itemInBasketId: string,
+    @Param('userId') userId: string,
   ): Promise<RemoveProductFromBasketResponse> {
-    return this.basketService.remove(id);
+    return this.basketService.remove(itemInBasketId, userId);
+  }
+  
+  @Get('/admin')
+  getBasketForAdmin(): Promise<OneItemInBasket[]> {
+    return this.basketService.getAllForAdmin();
   }
 
-  @Get('/')
-  listProductsInBasket(): Promise<ListProductsInBasketResponse> {
-    return this.basketService.getAll();
+  @Get('/stats')
+  getStats(): Promise<GetBasketStatsResponse> {
+    return this.basketService.getStats();
   }
 
-  @Get('/total-price')
-  getTotalPriceOfBasket(): Promise<GetTotalPriceOfBasketResponse> {
-    return this.basketService.getTotalPrice();
+  @Get('/:userId')
+  getBasket(
+    @Param('userId') userId: string,
+  ): Promise<OneItemInBasket[]> {
+    return this.basketService.getAllForUser(userId);
+  }
+
+  @Get('/total-price/:userId')
+  getTotalPriceOfBasket(
+    @Param('userId') userId: string,
+  ): Promise<GetTotalPriceOfBasketResponse> {
+    return this.basketService.getTotalPrice(userId);
   }
 }
