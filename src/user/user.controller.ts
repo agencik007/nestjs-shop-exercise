@@ -7,9 +7,7 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(
         @Inject(UserService) private userService: UserService,
-    ) {
-        
-    }
+    ) {}
 
     @Post('/register')
     register(
