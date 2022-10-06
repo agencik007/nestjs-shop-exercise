@@ -21,6 +21,8 @@ import {
 import { PasswordProtectGuard } from 'src/guards/password-protect.guard';
 import { UsePassword } from 'src/decorators/use-password.decorator';
 import { MyTimeoutInterceptor } from 'src/interceptors/my-timeout.interceptor';
+import { MyCacheInterceptor } from 'src/interceptors/my-chace.interceptor';
+import { UseCacheTime } from 'src/decorators/use-cache-time.decorator.ts';
 
 @Controller('basket')
 export class BasketController {
@@ -57,10 +59,11 @@ export class BasketController {
   @Get('/stats')
   @UseGuards(PasswordProtectGuard)
   @UsePassword('stats')
-  @UseInterceptors(MyTimeoutInterceptor)
+  @UseInterceptors(MyTimeoutInterceptor, MyCacheInterceptor)
+  @UseCacheTime(60)
   getStats(): Promise<GetBasketStatsResponse> {
-    // return this.basketService.getStats() 
-    return new Promise(resolve => {});
+    return this.basketService.getStats() 
+    // return new Promise(resolve => {});
   }
 
   @Get('/:userId')
