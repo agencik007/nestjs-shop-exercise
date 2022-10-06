@@ -14,7 +14,7 @@ export const connectionSource = new DataSource({
     'dist/**/*.entity{.ts,.js}',
   ],
   bigNumberStrings: false,
-  logging: true,
+  logging: false,
   migrations: ['dist/migration/*.js'],
   synchronize: true,
   autoLoadEntities: true,
