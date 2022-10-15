@@ -9,10 +9,26 @@ import { ShopService } from './shop/shop.service';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
+import { CacheModule } from './cache/cache.module';
+import { CronModule } from './cron/cron.module';
+import { MailModule } from './mail/mail.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule, UserModule],
-  controllers: [AppController, BasketController, ShopController, UserController],
+  imports: [
+    DatabaseModule,
+    UserModule,
+    CacheModule,
+    CronModule,
+    MailModule,
+    AuthModule,
+  ],
+  controllers: [
+    AppController,
+    BasketController,
+    ShopController,
+    UserController,
+  ],
   providers: [AppService, BasketService, ShopService, UserService],
 })
 export class AppModule {}
