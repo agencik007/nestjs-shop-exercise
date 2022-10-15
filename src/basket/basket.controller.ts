@@ -23,23 +23,27 @@ import { UsePassword } from 'src/decorators/use-password.decorator';
 import { MyTimeoutInterceptor } from 'src/interceptors/my-timeout.interceptor';
 import { MyCacheInterceptor } from 'src/interceptors/my-chace.interceptor';
 import { UseCacheTime } from 'src/decorators/use-cache-time.decorator.ts';
+import { AuthGuard } from '@nestjs/passport';
+import { UserObj } from 'src/decorators/user-obj.decorator';
+import { User } from 'src/user/user.entity';
 
 @Controller('basket')
 export class BasketController {
   constructor(@Inject(BasketService) private basketService: BasketService) {}
 
   @Post('/')
+  @UseGuards(AuthGuard('jwt'))
   addProductToBasket(
-    @Body() item: AddProductDto): Promise<AddProductToBasketResponse> {
-    return this.basketService.add(item);
+    @Body() product: AddProductDto,
+    @UserObj() user: User,
+  ): Promise<AddProductToBasketResponse> {
+    return this.basketService.add(product, user);
   }
 
   @Delete('/all/:userId')
-  removeAllProductsFromBasket(
-    @Param('userId') userId: string,
-  ) {
+  removeAllProductsFromBasket(@Param('userId') userId: string) {
     this.basketService.clearBasket(userId);
-  } 
+  }
 
   @Delete('/:itemInBasketId/:userId')
   removeProductFromBasket(
@@ -48,7 +52,7 @@ export class BasketController {
   ): Promise<RemoveProductFromBasketResponse> {
     return this.basketService.remove(itemInBasketId, userId);
   }
-  
+
   @Get('/admin')
   @UseGuards(PasswordProtectGuard)
   @UsePassword('admin')
@@ -62,14 +66,12 @@ export class BasketController {
   @UseInterceptors(MyTimeoutInterceptor, MyCacheInterceptor)
   @UseCacheTime(60)
   getStats(): Promise<GetBasketStatsResponse> {
-    return this.basketService.getStats() 
+    return this.basketService.getStats();
     // return new Promise(resolve => {});
   }
 
   @Get('/:userId')
-  getBasket(
-    @Param('userId') userId: string,
-  ): Promise<OneItemInBasket[]> {
+  getBasket(@Param('userId') userId: string): Promise<OneItemInBasket[]> {
     return this.basketService.getAllForUser(userId);
   }
 
