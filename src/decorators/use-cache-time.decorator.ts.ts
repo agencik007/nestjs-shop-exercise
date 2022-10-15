@@ -1,4 +1,4 @@
-import { SetMetadata } from "@nestjs/common";
+import { SetMetadata } from '@nestjs/common';
 
-export const UseCacheTime = (cacheTimeInSec: number) => SetMetadata
-    ('cacheTimeInSec', cacheTimeInSec);
+export const UseCacheTime = (cacheTimeInSec: number) =>
+  SetMetadata('cacheTimeInSec', cacheTimeInSec);
